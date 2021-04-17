@@ -3,6 +3,7 @@ package com.example.merienlab3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import static java.lang.Math.abs;
 import static java.lang.Math.atan;
 import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,10 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView res = (TextView) findViewById(R.id.ResultText);
-        res.setMovementMethod(new ScrollingMovementMethod());
     }
-
 
     public void onButtonClick (View v){
 
@@ -46,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         double Res;
         String textRes = "";
 
+        Transit.x = x;
+        Transit.count = count;
+        Transit.Step = Step;
+
         try {
             FileOutputStream fileOutput = openFileOutput("Lab3.txt", MODE_PRIVATE);
 
@@ -57,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
             do {
                 Res = (Math.sqrt((pow(e, x)) - pow(Math.cos(pow(x, 2) * pow(a, 5)), 4)) + pow(atan(a - pow(x, 5)), 4)) / pow(abs(a + (x * pow(c, 4))), -e);
+
                 String res_string = String.format("%.1f", Res);
-                textRes = textRes+"\nX = "+x+"; Відповідь = "+res_string+"\n";
+                textRes = textRes+"\nX = "+x+";\nВідповідь = "+res_string+"\n";
 
                 x = x + Step;
             } while (x<=count);
@@ -72,23 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLoadClick (View v){
-
-        TextView res = (TextView) findViewById(R.id.ResultText);
-        try {
-            FileInputStream fileInput = openFileInput("Lab3.txt");
-            InputStreamReader reader = new InputStreamReader(fileInput);
-            BufferedReader buffer = new BufferedReader(reader);
-            StringBuilder strBuffer =  new StringBuilder();
-            String ResLines;
-            while ((ResLines = buffer.readLine()) != null) {
-                strBuffer.append(ResLines).append("\n");
-            }
-            res.setText(strBuffer.toString());
-            fileInput.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Intent graphgo = new Intent(".graph");
+        startActivity(graphgo);
     }
 }
